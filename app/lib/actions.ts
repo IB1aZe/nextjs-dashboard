@@ -99,9 +99,23 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     redirect("/dashboard/invoices");
 }
 
-export async function deleteInvoice(id: string) {
+export async function deleteInvoice(id: string, formData: FormData) {
+    const validatedFields = UpdateInvoice.safeParse({
+        customerId: formData.get("customerId"),
+        amount: formData.get("amount"),
+        status: formData.get("status"),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Missing Fields. Failed to Update Invoice.",
+        };
+    }
+
+    const { customerId} = validatedFields.data;
     try {
-        await sql`DELETE FROM invoices WHERE id = ${id}`;
+        await sql`DELETE FROM invoices WHERE id = ${customerId}`;
     } catch (error) {
         console.log(error);
         return {
