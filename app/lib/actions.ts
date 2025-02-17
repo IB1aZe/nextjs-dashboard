@@ -113,9 +113,10 @@ export async function deleteInvoice(id: string, formData: FormData) {
         };
     }
 
-    const { customerId} = validatedFields.data;
+    const { customerId } = validatedFields.data;
+    console.log(customerId);
     try {
-        await sql`DELETE FROM invoices WHERE id = ${customerId}`;
+        await sql`DELETE FROM invoices WHERE id = ${id}`;
     } catch (error) {
         console.log(error);
         return {
